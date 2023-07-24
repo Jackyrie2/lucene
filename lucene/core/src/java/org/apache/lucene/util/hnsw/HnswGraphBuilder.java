@@ -313,6 +313,7 @@ public final class HnswGraphBuilder<T> {
      * is closer to target than it is to any of the already-selected neighbors (ie selected in this method,
      * since the node is new and has no prior neighbors).
      */
+    System.out.println("ADD DIVERSE NEIGHBOR....");
     NeighborArray neighbors = hnsw.getNeighbors(level, node);
     assert neighbors.size() == 0; // new node
     popToScratch(candidates);

@@ -17,9 +17,12 @@
 
 package org.apache.lucene.util.hnsw;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
+import java.util.List;
 import org.apache.lucene.util.ArrayUtil;
 
 /**
@@ -130,11 +133,17 @@ public class NeighborArray {
     assert sortedNodeSize < size : "Call this method only when there's unsorted node";
     int tmpNode = node[sortedNodeSize];
     // Now we compute all the missing score using scoringContext
-    for (Integer index : scoringContext.keySet()) {
+    List<Integer> sortedKeys = new ArrayList<Integer>(scoringContext.keySet());
+    Collections.sort(sortedKeys);
+    for (Integer index : sortedKeys) {
+      if (index > sortedNodeSize) {
+        break;
+      }
+      System.out.println("CALCULATING SCORE");
       score[index] = scoringContext.get(index).calculateScore();
+      scoringContext.remove(index);
     }
-    // Reset scoringContext
-    scoringContext = new HashMap<>();
+
     float tmpScore = score[sortedNodeSize];
     int insertionPoint =
         scoresDescOrder
